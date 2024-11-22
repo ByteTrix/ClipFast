@@ -2,12 +2,11 @@
   "manifest_version": 3,
   "name": "ClipFast",
   "version": "1.0",
-  "description": "Adds a 'Copy URL' button to copy any URL from the address bar.",
+  "description": "Adds a button to copy any URL to the clipboard.",
   "permissions": [
     "activeTab",
     "clipboardWrite",
-    "scripting",
-    "tabs"
+    "scripting"
   ],
   "action": {
     "default_icon": {
@@ -22,8 +21,7 @@
     "128": "icons/icon128.png"
   },
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "host_permissions": [
     "<all_urls>"
