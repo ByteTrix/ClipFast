@@ -1,0 +1,35 @@
+{
+  "name": "clipfast",
+  "version": "1.0.0",
+  "author": "Kxvin",
+  "license": "ISC",
+  "description": "Adds a 'Copy URL' button in the toolbar for both Chrome and Firefox.",
+  "scripts": {
+    "build:chrome": "npm-run-all build:chrome:create-dir build:chrome:files build:chrome:icons build:chrome:background build:chrome:rename-manifest build:chrome:cleanup",
+    "build:firefox": "npm-run-all build:firefox:create-dir build:firefox:files build:firefox:icons build:firefox:background build:firefox:rename-manifest build:firefox:cleanup",
+    
+    "build:chrome:create-dir": "if not exist dist\\chrome mkdir dist\\chrome",
+    "build:firefox:create-dir": "if not exist dist\\firefox mkdir dist\\firefox",
+
+    "build:chrome:files": "copyfiles -u 1 src\\* dist\\chrome && del dist\\chrome\\manifest.firefox.json",
+    "build:firefox:files": "copyfiles -u 1 src\\* dist\\firefox && del dist\\firefox\\manifest.chrome.json",
+
+    "build:chrome:icons": "copyfiles -u 1 src\\icons\\* dist\\chrome",
+    "build:firefox:icons": "copyfiles -u 1 src\\icons\\* dist\\firefox",
+
+    "build:chrome:background": "move dist\\chrome\\background_chrome.js dist\\chrome\\background.js",
+    "build:firefox:background": "move dist\\firefox\\background_firefox.js dist\\firefox\\background.js",
+
+    "build:chrome:cleanup": "del dist\\chrome\\background_firefox.js",
+    "build:firefox:cleanup": "del dist\\firefox\\background_chrome.js",
+
+    "build:chrome:rename-manifest": "move dist\\chrome\\manifest.chrome.json dist\\chrome\\manifest.json",
+    "build:firefox:rename-manifest": "move dist\\firefox\\manifest.firefox.json dist\\firefox\\manifest.json",
+    
+    "build": "npm-run-all build:chrome build:firefox"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "npm-run-all": "^4.1.5"
+  }
+}
