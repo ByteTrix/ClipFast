@@ -1,4 +1,4 @@
-/// Function to show badge feedback
+// Function to show badge feedback
 function showBadge(success = true) {
   chrome.action.setBadgeText({
     text: success ? "✓" : "!"
@@ -11,76 +11,87 @@ function showBadge(success = true) {
   }, 1500);
 }
 
-// Function to save the URL to a file
-function saveToFile(url) {
-  const blob = new Blob([url + "\n"], { type: "text/plain" });
-  const fileUrl = URL.createObjectURL(blob);
-
-  chrome.downloads.download({
-    url: fileUrl,
-    filename: "saved_urls.txt",
-    saveAs: true
-  }, () => {
-    console.log("URL saved to file:", url);
-  });
-}
-
-// Function to share the URL (fallback alert for unsupported platforms)
-function shareURL(url) {
-  if (navigator.share) {
-    navigator.share({
-      title: "Check out this URL",
-      text: "Here's a link you might find useful:",
-      url: url
-    }).then(() => {
-      console.log("URL shared successfully.");
-    }).catch((error) => {
-      console.error("Error sharing URL:", error);
-    });
-  } else {
-    alert("Sharing is not supported on this browser.");
-  }
-}
-
-// Main click handler
+// Main click handler for the extension icon
 chrome.action.onClicked.addListener(async (tab) => {
   try {
     const urlToCopy = tab.url;
 
-    // Block restricted URLs
-    const restricted = ["chrome://", "chromewebstore.google.com"];
-    if (restricted.some((restrictedURL) => urlToCopy.startsWith(restrictedURL))) {
+    // Check if the current page URL is from a restricted domain (e.g., chrome:// URLs)
+    if (urlToCopy.includes("chromewebstore.google.com") || urlToCopy.startsWith("chrome://")) {
       console.error("Cannot perform actions on restricted pages.");
       showBadge(false);
       return;
     }
 
-    // Menu for selecting actions
-    const action = prompt(
-      "Choose an action:\n1. Copy URL\n2. Save URL\n3. Share URL",
-      "1"
-    );
-
-    switch (action) {
-      case "1":
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: (text) => navigator.clipboard.writeText(text),
-          args: [urlToCopy],
-        });
-        showBadge(true);
-        break;
-      case "2":
-        saveToFile(urlToCopy);
-        break;
-      case "3":
-        shareURL(urlToCopy);
-        break;
-      default:
-        console.log("No valid action selected.");
-    }
+    // Send the URL and action to the content script to display the popup
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: showPopup,
+      args: [urlToCopy]
+    });
+    showBadge(true);
   } catch (error) {
-    console.error("Error handling action:", error);
+    console.error("Error executing script:", error);
     showBadge(false);
   }
 });
+
+// Function to show popup (used in content script)
+function showPopup(url) {
+  // Dynamically create a popup element
+  const popup = document.createElement("div");
+  popup.id = "url-popup";
+  popup.style.position = "fixed";
+  popup.style.top = "20px"; // Ensure it's positioned in the top-left corner
+  popup.style.left = "20px";
+  popup.style.background = "#333"; // Dark background
+  popup.style.color = "#fff"; // White text
+  popup.style.border = "1px solid #ccc";
+  popup.style.borderRadius = "8px";
+  popup.style.padding = "15px 20px"; // Add some padding for spacing
+  popup.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)";
+  popup.style.zIndex = "10000";
+  popup.style.fontFamily = "'Arial', sans-serif"; // Use a clean font
+  popup.style.fontSize = "14px"; // Adjust font size for readability
+  popup.style.maxWidth = "300px"; // Limit the width to prevent overflow
+  popup.style.transition = "opacity 0.3s ease"; // Smooth transition for fading out
+  popup.style.margin = "0"; // Reset margin to avoid unwanted space around the popup
+
+  // Add message and buttons
+  popup.innerHTML = `
+    <p style="margin: 0 0 10px; font-weight: bold;">URL copied to clipboard!</p>
+    <button id="share-button" style="background-color: #4CAF50; color: #fff; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer; margin-right: 5px;">Share</button>
+    <button id="close-popup" style="background-color: #f44336; color: #fff; border: none; border-radius: 5px; padding: 8px 12px; cursor: pointer;">Close</button>
+  `;
+
+  // Append the popup to the document body
+  document.body.appendChild(popup);
+
+  // Close button handler
+  document.getElementById("close-popup").onclick = () => {
+    document.body.removeChild(popup);
+  };
+
+  // Share button handler
+  document.getElementById("share-button").onclick = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this URL",
+          text: "Here's a link you might find useful:",
+          url: url
+        })
+        .then(() => console.log("URL shared successfully."))
+        .catch((error) => console.error("Error sharing URL:", error));
+    } else {
+      alert("Sharing is not supported on this browser.");
+    }
+  };
+
+  // Automatically close the popup after 5 seconds
+  setTimeout(() => {
+    if (document.body.contains(popup)) {
+      document.body.removeChild(popup);
+    }
+  }, 5000);
+}
