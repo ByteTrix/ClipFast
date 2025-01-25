@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate URL Sharer</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background: #f0f2f5;
+            min-width: 320px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 1.4rem;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .share-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: #333;
+        }
+        .share-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        .share-btn i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .url-box {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        #url-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .copy-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+        .qrcode-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .qrcode-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Share URL</h1>
+        <div class="share-grid">
+            <!-- Social Media -->
+            <a class="share-btn" id="whatsapp" style="color: #25D366;">
+                <i>📱</i> WhatsApp
+            </a>
+            <a class="share-btn" id="telegram" style="color: #0088CC;">
+                <i>✈️</i> Telegram
+            </a>
+            <a class="share-btn" id="twitter" style="color: #1DA1F2;">
+                <i>🐦</i> Twitter
+            </a>
+            <a class="share-btn" id="facebook" style="color: #1877F2;">
+                <i>📘</i> Facebook
+            </a>
+            
+            <!-- Professional Networks -->
+            <a class="share-btn" id="linkedin" style="color: #0A66C2;">
+                <i>💼</i> LinkedIn
+            </a>
+            <a class="share-btn" id="slack" style="color: #4A154B;">
+                <i>💬</i> Slack
+            </a>
+            
+            <!-- Communication -->
+            <a class="share-btn" id="email" style="color: #EA4335;">
+                <i>📧</i> Email
+            </a>
+            <a class="share-btn" id="skype" style="color: #00AFF0;">
+                <i>📞</i> Skype
+            </a>
+            
+            <!-- Tech Communities -->
+            <a class="share-btn" id="reddit" style="color: #FF4500;">
+                <i>🤖</i> Reddit
+            </a>
+            <a class="share-btn" id="hackernews" style="color: #FF6600;">
+                <i>👨💻</i> Hacker News
+            </a>
+            
+            <!-- File Sharing -->
+            <a class="share-btn" id="qrcode" style="color: #333;">
+                <i>🔲</i> QR Code
+            </a>
+            <button class="share-btn" id="copy-md" style="color: #6F42C1;">
+                <i>📄</i> Markdown
+            </button>
+        </div>
+
+        <div class="url-box">
+            <input type="text" id="url-input" readonly>
+            <button class="copy-btn" id="copy-url">Copy</button>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="qrcode-modal" id="qrcode-modal">
+        <div class="qrcode-content">
+            <div id="qrcode"></div>
+            <button class="copy-btn" onclick="document.getElementById('qrcode-modal').style.display = 'none'">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Get URL from query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToShare = urlParams.get('url');
+        document.getElementById('url-input').value = urlToShare;
+
+        // Share Configuration
+        const services = {
+            whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(urlToShare)}`,
+            telegram: `https://t.me/share/url?url=${encodeURIComponent(urlToShare)}`,
+            twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(urlToShare)}`,
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`,
+            linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(urlToShare)}`,
+            reddit: `https://reddit.com/submit?url=${encodeURIComponent(urlToShare)}`,
+            slack: `https://slack.com/share?url=${encodeURIComponent(urlToShare)}&text=Check%20this%20out`,
+            email: `mailto:?subject=Shared%20Link&body=${encodeURIComponent(urlToShare)}`,
+            skype: `https://web.skype.com/share?url=${encodeURIComponent(urlToShare)}`,
+            hackernews: `https://news.ycombinator.com/submitlink?u=${encodeURIComponent(urlToShare)}`
+        };
+
+        // Set up service buttons
+        Object.keys(services).forEach(service => {
+            const btn = document.getElementById(service);
+            if (btn) btn.href = services[service];
+        });
+
+        // Copy Functions
+        document.getElementById('copy-url').addEventListener('click', () => {
+            navigator.clipboard.writeText(urlToShare)
+                .then(() => alert('URL copied!'))
+                .catch(() => alert('Copy failed!'));
+        });
+
+        document.getElementById('copy-md').addEventListener('click', () => {
+            const mdLink = `[${document.title}](${urlToShare})`;
+            navigator.clipboard.writeText(mdLink)
+                .then(() => alert('Markdown copied!'))
+                .catch(() => alert('Copy failed!'));
+        });
+
+        // QR Code Generation
+        document.getElementById('qrcode').addEventListener('click', () => {
+            const modal = document.getElementById('qrcode-modal');
+            modal.style.display = 'flex';
+            new QRCode(document.getElementById('qrcode'), {
+                text: urlToShare,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('qrcode-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
