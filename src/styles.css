@@ -1,0 +1,170 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    background: #f0f2f5;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px; /* Maximum width */
+    min-width: 400px; /* Minimum width */
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px; /* Add some margin */
+}
+
+
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.share-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.share-btn svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+/* Social Media Colors */
+.whatsapp { background: #25D366; }
+.telegram { background: #0088cc; }
+.facebook { background: #1877F2; }
+.twitter { background: #1DA1F2; }
+.linkedin { background: #0A66C2; }
+.reddit { background: #FF4500; }
+.pinterest { background: #E60023; }
+.email { background: #EA4335; }
+.sms { background: #34B7F1; }
+
+.url-display {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+#url-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.copy-btn {
+    padding: 12px 24px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: #34495e;
+}
+
+.qrcode-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.qrcode-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+#qrcode {
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .share-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .share-btn {
+        font-size: 14px;
+        padding: 12px 15px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        min-width: unset;
+        width: 95%;
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .share-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.qrcode-btn {
+    background: #2c3e50;
+    width: 100%;
+    margin: 15px 0;
+}
+
+#qrcode {
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+#qrcode img {
+    display: block;
+    margin: 0 auto;
+}
