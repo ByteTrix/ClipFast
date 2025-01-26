@@ -4,7 +4,7 @@
 
 A browser extension that provides quick URL sharing capabilities with one-click copying, social media sharing, and QR code generation.
 
-![ClipFast Demo](screenshots/demo.gif) <!-- Add actual screenshot later -->
+![ClipFast Demo](demo.gif)
 
 
 
