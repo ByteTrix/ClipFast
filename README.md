@@ -11,13 +11,9 @@ A browser extension that provides quick URL sharing capabilities with one-click 
 ## Features
 
 - 🚀 One-click URL copying to clipboard
-- 📱 Share URLs via popular social platforms:
-  - WhatsApp
-  - Telegram
-  - Facebook
-  - Twitter/LinkedIn/Reddit/Pinterest
+- 📱 Use OS Native Share Feature (Only in Chromium Browsers)
 - 🔄 Generate QR codes for quick mobile sharing (Only in Firefox)
-- 🖥️ Clean and intuitive popup interface
+- 🖥️ Clean and intuitive Share popup interface for Firefox
 - 🌐 Cross-browser support (Chrome, Firefox, Edge)
 - 📋 Clipboard integration with success/error feedback
 
@@ -29,7 +25,7 @@ A browser extension that provides quick URL sharing capabilities with one-click 
 - Basic understanding of browser extensions
 
 ### For Users
-1. **Chrome/Edge:**
+1. **Chromium Browsers:**
    - Clone repository: `git clone https://github.com/ByteTrix/clipfast.git`
    - Run "build.ps1" 
    - Visit `chrome://extensions`
