@@ -19,6 +19,14 @@ A browser extension that provides quick URL sharing capabilities with one-click 
 
 ## Installation
 
+**Chrome Web Store** :
+
+  [![Available in the Chrome Web Store](https://developer.chrome.com/static/docs/webstore/branding/image/mPGKYBIR2uCP0ApchDXE.png)](https://chromewebstore.google.com/detail/clipfast/gkbmmjcfodkkonmkgaiemjbgjedkgohh)
+
+**Firefox Addon** :
+
+  [![Available in the Firefox Add-ons Store](https://blog.mozilla.org/addons/files/2015/11/get-the-addon.png)](https://addons.mozilla.org/en-US/firefox/addon/clipfast/)
+
 ### Prerequisites
 - Modern browser (Chrome 80+, Firefox 78+, Edge 85+)
 - Git (for development setup)
