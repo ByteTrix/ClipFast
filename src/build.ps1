@@ -33,6 +33,10 @@ Write-Output "Setting up Firefox extension..."
 Copy-Item -Path (Join-Path $SourcePath "background.js") -Destination $FirefoxDir -Force
 Copy-Item -Path (Join-Path $SourcePath "manifest.json") -Destination $FirefoxDir -Force
 Copy-Item -Path (Join-Path $SourcePath "urlpopup.js") -Destination $FirefoxDir -Force
+Copy-Item -Path (Join-Path $SourcePath "share.html") -Destination $FirefoxDir -Force
+Copy-Item -Path (Join-Path $SourcePath "share.js") -Destination $FirefoxDir -Force
+Copy-Item -Path (Join-Path $SourcePath "styles.css") -Destination $FirefoxDir -Force
+Copy-Item -Path (Join-Path $SourcePath "qrcode.min.js") -Destination $FirefoxDir -Force
 if (Test-Path (Join-Path $SourcePath "icons")) {
     $FirefoxIconsDir = Join-Path $FirefoxDir "icons"
     New-Item -ItemType Directory -Path $FirefoxIconsDir -Force | Out-Null
